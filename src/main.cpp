@@ -2,7 +2,7 @@
 
 int main()
 {
-    startThreads(20);
+    startThreads(10);
     startDeadlockThreads();
     return 0;
 }

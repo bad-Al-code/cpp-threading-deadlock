@@ -20,7 +20,7 @@ void threadFunction(int id)
     std::this_thread::sleep_for(std::chrono::seconds(delay));
 
     int a = 0, b = 1, c = 0;
-    for (int i = 0; i < 10000; ++i)
+    for (int i = 0; i < 100; ++i)
     {
         c = a + b;
         a = b;
@@ -59,9 +59,9 @@ void deadlockFunction1()
 
 void deadlockFunction2()
 {
-    std::lock_guard<std::mutex> lock2(mtx2);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     std::lock_guard<std::mutex> lock1(mtx1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::lock_guard<std::mutex> lock2(mtx2);
     std::cout << "Thread 2 acquired both locks." << std::endl;
 }
 
