@@ -2,15 +2,16 @@
 #include <thread>
 #include <vector>
 #include <mutex>
-#include "thread.h"
 #include <cstdlib>
 #include <ctime>
+#include "thread.h"
 
 std::mutex mtx;
 
 void threadFunction(int id)
 {
-    int delay = 1 + std::rand() % 5;
+    int delay = 2 + std::rand() % 6;
+
     {
         std::lock_guard<std::mutex> lock(mtx);
         std::cout << "Thread " << id << " is starting work with a delay of " << delay << " seconds." << std::endl;
@@ -18,15 +19,17 @@ void threadFunction(int id)
 
     std::this_thread::sleep_for(std::chrono::seconds(delay));
 
-    long long result = 0;
-    for (int i = 0; i < 1000000; ++i)
+    int a = 0, b = 1, c = 0;
+    for (int i = 0; i < 10000; ++i)
     {
-        result += 1;
+        c = a + b;
+        a = b;
+        b = c;
     }
 
     {
         std::lock_guard<std::mutex> lock(mtx);
-        std::cout << "Thread " << id << " hass finished its work after " << delay << " seconds wit result " << result << "." << std::endl;
+        std::cout << "Thread " << id << " has finished its work after " << delay << " seconds. Last Fibonacci number: " << c << "." << std::endl;
     }
 }
 

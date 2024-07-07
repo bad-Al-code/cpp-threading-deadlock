@@ -2,6 +2,6 @@
 
 int main()
 {
-    startThreads(15);
+    startThreads(20);
     return 0;
 }
