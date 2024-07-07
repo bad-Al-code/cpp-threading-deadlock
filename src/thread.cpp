@@ -10,7 +10,7 @@ std::mutex mtx1, mtx2;
 
 void threadFunction(int id)
 {
-    int delay = 2 + std::rand() % 6;
+    int delay = 2 + std::rand() % 4;
 
     {
         std::lock_guard<std::mutex> lock(mtx1);
