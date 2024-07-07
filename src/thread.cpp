@@ -10,17 +10,23 @@ std::mutex mtx;
 
 void threadFunction(int id)
 {
-    int delay = 1 + std::rand() % 3;
+    int delay = 1 + std::rand() % 5;
     {
         std::lock_guard<std::mutex> lock(mtx);
-        std::cout << "Thread " << id << " is accessing the shared resource." << std::endl;
+        std::cout << "Thread " << id << " is starting work with a delay of " << delay << " seconds." << std::endl;
     }
 
     std::this_thread::sleep_for(std::chrono::seconds(delay));
 
+    long long result = 0;
+    for (int i = 0; i < 1000000; ++i)
+    {
+        result += 1;
+    }
+
     {
         std::lock_guard<std::mutex> lock(mtx);
-        std::cout << "Thread " << id << " hass finished its work after " << delay << " seconds." << std::endl;
+        std::cout << "Thread " << id << " hass finished its work after " << delay << " seconds wit result " << result << "." << std::endl;
     }
 }
 
