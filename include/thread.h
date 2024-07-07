@@ -1,6 +1,6 @@
-#ifndef THREAD
-#define THREAD
+#ifndef THREAD_H
+#define THREAD_H
 
-void startThreads();
+void startThreads(int numThreads);
 
 #endif

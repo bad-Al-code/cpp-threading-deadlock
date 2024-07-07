@@ -1,7 +1,7 @@
 #include "thread.h"
 
 int main() {
-    startThreads();
+    startThreads(10);
     return 0;
 }
 
