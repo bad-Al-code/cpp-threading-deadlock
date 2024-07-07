@@ -59,9 +59,9 @@ void deadlockFunction1()
 
 void deadlockFunction2()
 {
-    std::lock_guard<std::mutex> lock2(mtx2);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     std::lock_guard<std::mutex> lock1(mtx1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::lock_guard<std::mutex> lock2(mtx2);
     std::cout << "Thread 2 acquired both locks." << std::endl;
 }
 
@@ -91,4 +91,34 @@ void startDeadlockThreads()
 
     t1.join();
     t2.join();
+}
+
+void conditionalLockFunction(int id)
+{
+    if (id % 2 == 0)
+    {
+        std::lock_guard<std::mutex> lock1(mtx1);
+        std::cout << "Thread " << id << " acquired mtx1." << std::endl;
+    }
+    else
+    {
+        std::lock_guard<std::mutex> lock2(mtx2);
+        std::cout << "Thread " << id << " acquired mtx1." << std::endl;
+    }
+}
+
+void startConditionalThreads(int numThreads)
+{
+    std::srand(std::time(nullptr));
+
+    std::vector<std::thread> threads;
+    for (int i = 1; i <= numThreads; ++i)
+    {
+        threads.push_back(std::thread(threadFunction, i));
+    }
+
+    for (auto &t : threads)
+    {
+        t.join();
+    }
 }
