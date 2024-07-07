@@ -6,14 +6,14 @@
 #include <ctime>
 #include "thread.h"
 
-std::mutex mtx;
+std::mutex mtx1, mtx2;
 
 void threadFunction(int id)
 {
     int delay = 2 + std::rand() % 6;
 
     {
-        std::lock_guard<std::mutex> lock(mtx);
+        std::lock_guard<std::mutex> lock(mtx1);
         std::cout << "Thread " << id << " is starting work with a delay of " << delay << " seconds." << std::endl;
     }
 
@@ -28,7 +28,7 @@ void threadFunction(int id)
     }
 
     {
-        std::lock_guard<std::mutex> lock(mtx);
+        std::lock_guard<std::mutex> lock(mtx1);
         std::cout << "Thread " << id << " has finished its work after " << delay << " seconds. Last Fibonacci number: " << c << "." << std::endl;
     }
 }
@@ -47,4 +47,29 @@ void startThreads(int numThreads)
     {
         t.join();
     }
+}
+
+void deadlockFunction1()
+{
+    std::lock_guard<std::mutex> lock1(mtx1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::lock_guard<std::mutex> lock2(mtx2);
+    std::cout << "Thread 1 acquired both locks." << std::endl;
+}
+
+void deadlockFunction2()
+{
+    std::lock_guard<std::mutex> lock2(mtx2);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::lock_guard<std::mutex> lock1(mtx1);
+    std::cout << "Thread 2 acquired both locks." << std::endl;
+}
+
+void startDeadlockThreads()
+{
+    std::thread t1(deadlockFunction1);
+    std::thread t2(deadlockFunction2);
+
+    t1.join();
+    t2.join();
 }
